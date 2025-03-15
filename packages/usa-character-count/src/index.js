@@ -13,7 +13,7 @@ const LABEL_ERROR_CLASS = `${LABEL_CLASS}--error`;
 const INPUT = `.${PREFIX}-character-count__field`;
 const INPUT_ERROR_CLASS = `${PREFIX}-input--error`;
 const MESSAGE = `.${PREFIX}-character-count__message`;
-const VALIDATION_MESSAGE = "The content is too long.";
+const VALIDATION_MESSAGE = "Treść jest za długa.";
 const MESSAGE_INVALID_CLASS = `${PREFIX}-character-count__status--invalid`;
 const STATUS_MESSAGE_CLASS = `${CHARACTER_COUNT_CLASS}__status`;
 const STATUS_MESSAGE_SR_ONLY_CLASS = `${CHARACTER_COUNT_CLASS}__sr-status`;
@@ -75,7 +75,7 @@ const createStatusMessages = (characterCountEl) => {
   const statusMessage = document.createElement("div");
   const srStatusMessage = document.createElement("div");
   const maxLength = characterCountEl.dataset.maxlength;
-  const defaultMessage = `${maxLength} ${DEFAULT_STATUS_LABEL}`;
+  const defaultMessage = `Maksymalnie ${maxLength} znaków`;
 
   statusMessage.classList.add(`${STATUS_MESSAGE_CLASS}`, "usa-hint");
   srStatusMessage.classList.add(
@@ -103,13 +103,25 @@ const getCountMessage = (currentLength, maxLength) => {
   let newMessage = "";
 
   if (currentLength === 0) {
-    newMessage = `${maxLength} ${DEFAULT_STATUS_LABEL}`;
+    newMessage = `Maksymalnie ${maxLength} znaków`;
   } else {
     const difference = Math.abs(maxLength - currentLength);
-    const characters = `character${difference === 1 ? "" : "s"}`;
-    const guidance = currentLength > maxLength ? "over limit" : "left";
 
-    newMessage = `${difference} ${characters} ${guidance}`;
+    if (currentLength > maxLength) {
+      if (difference === 1) {
+        newMessage = `Przekroczono limit o 1 znak`;
+      } else if (difference > 1 && difference < 5) {
+        newMessage = `Przekroczono limit o ${difference} znaki`;
+      } else {
+        newMessage = `Przekroczono limit o ${difference} znaków`;
+      }
+    } else if (difference === 1) {
+        newMessage = `Pozostał 1 znak`;
+    } else if (difference > 1 && difference < 5) {
+      newMessage = `Pozostały ${difference} znaki`;
+    } else {
+      newMessage = `Pozostało ${difference} znaków`;
+    }
   }
 
   return newMessage;

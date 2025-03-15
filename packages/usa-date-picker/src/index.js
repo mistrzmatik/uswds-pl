@@ -78,7 +78,7 @@ const CALENDAR_YEAR_PICKER = `.${CALENDAR_YEAR_PICKER_CLASS}`;
 const CALENDAR_MONTH_FOCUSED = `.${CALENDAR_MONTH_FOCUSED_CLASS}`;
 const CALENDAR_YEAR_FOCUSED = `.${CALENDAR_YEAR_FOCUSED_CLASS}`;
 
-const VALIDATION_MESSAGE = "Please enter a valid date";
+const VALIDATION_MESSAGE = "Proszę wpisać prawidłową datę";
 
 // An array of Dates that represent each month in the year
 const MONTH_DATE_SEED = Array.from({ length: 12 }).map(
@@ -87,7 +87,7 @@ const MONTH_DATE_SEED = Array.from({ length: 12 }).map(
 
 // An array of Dates that represent each day of the week
 const DAY_OF_WEEK_DATE_SEED = Array.from({ length: 7 }).map(
-  (_, i) => new Date(0, 0, i),
+  (_, i) => new Date(0, 0, i + 1),
 );
 
 const CALENDAR_LABELS_BY_LANG = new Map();
@@ -97,7 +97,7 @@ const ENTER_KEYCODE = 13;
 const YEAR_CHUNK = 12;
 
 const DEFAULT_MIN_DATE = "0000-01-01";
-const DEFAULT_EXTERNAL_DATE_FORMAT = "MM/DD/YYYY";
+const DEFAULT_EXTERNAL_DATE_FORMAT = "YYYY-MM-DD";
 const INTERNAL_DATE_FORMAT = "YYYY-MM-DD";
 
 const NOT_DISABLED_SELECTOR = ":not([disabled])";
@@ -234,26 +234,27 @@ const addWeeks = (_date, numWeeks) => addDays(_date, numWeeks * 7);
 const subWeeks = (_date, numWeeks) => addWeeks(_date, -numWeeks);
 
 /**
- * Set date to the start of the week (Sunday)
+ * Set date to the start of the week (Monday)
  *
  * @param {Date} _date the date to adjust
  * @returns {Date} the adjusted date
  */
 const startOfWeek = (_date) => {
   const dayOfWeek = _date.getDay();
-  return subDays(_date, dayOfWeek);
+  const diff = (dayOfWeek === 0 ? -6 : 1) - dayOfWeek;
+  return subDays(_date, -diff);
 };
 
 /**
- * Set date to the end of the week (Saturday)
+ * Set date to the end of the week (Sunday)
  *
  * @param {Date} _date the date to adjust
- * @param {number} numWeeks the difference in weeks
  * @returns {Date} the adjusted date
  */
 const endOfWeek = (_date) => {
   const dayOfWeek = _date.getDay();
-  return addDays(_date, 6 - dayOfWeek);
+  const diff = 7 - (dayOfWeek === 0 ? 7 : dayOfWeek);
+  return addDays(_date, diff);
 };
 
 /**
@@ -507,7 +508,7 @@ const parseDateString = (
     let yearStr;
 
     if (dateFormat === DEFAULT_EXTERNAL_DATE_FORMAT) {
-      [monthStr, dayStr, yearStr] = dateString.split("/");
+      [yearStr, monthStr, dayStr] = dateString.split("-");
     } else {
       [yearStr, monthStr, dayStr] = dateString.split("-");
     }
@@ -574,7 +575,7 @@ const formatDate = (date, dateFormat = INTERNAL_DATE_FORMAT) => {
   const year = date.getFullYear();
 
   if (dateFormat === DEFAULT_EXTERNAL_DATE_FORMAT) {
-    return [padZeros(month, 2), padZeros(day, 2), padZeros(year, 4)].join("/");
+    return [padZeros(year, 4), padZeros(month, 2), padZeros(day, 2)].join("-");
   }
 
   return [padZeros(year, 4), padZeros(month, 2), padZeros(day, 2)].join("-");
@@ -698,10 +699,10 @@ const getDatePickerContext = (el) => {
   const defaultDate = parseDateString(datePickerEl.dataset.defaultDate);
 
   if (minDate && maxDate && minDate > maxDate) {
-    throw new Error("Minimum date cannot be after maximum date");
+    throw new Error("Data minimalna nie może być późniejsza niż data maksymalna");
   }
 
-  const lang = document.documentElement.lang || "en";
+  const lang = document.documentElement.lang || "pl";
 
   // if the language is not found generate the list
   if (!CALENDAR_LABELS_BY_LANG.has(lang)) {
@@ -716,7 +717,7 @@ const getDatePickerContext = (el) => {
       ),
       dayOfWeeksAbv: DAY_OF_WEEK_DATE_SEED.map((date) =>
         date.toLocaleString(lang, {
-          weekday: "narrow",
+          weekday: "short",
         }),
       ),
     });

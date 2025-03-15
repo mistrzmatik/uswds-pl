@@ -513,7 +513,7 @@ const displayList = (el) => {
 
   const noResults = document.createElement("li");
   noResults.setAttribute("class", `${LIST_OPTION_CLASS}--no-results`);
-  noResults.textContent = "No results found";
+  noResults.textContent = "Nie znaleziono wyników";
 
   listEl.hidden = false;
 
@@ -530,8 +530,8 @@ const displayList = (el) => {
   inputEl.setAttribute("aria-expanded", "true");
 
   statusEl.textContent = numOptions
-    ? `${numOptions} result${numOptions > 1 ? "s" : ""} available.`
-    : "No results.";
+    ? `Dostępne wyniki: ${numOptions}.`
+    : "Brak wyników.";
 
   let itemToFocus;
 

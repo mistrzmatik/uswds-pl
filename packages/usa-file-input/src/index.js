@@ -28,7 +28,7 @@ const EXCEL_PREVIEW_CLASS = `${GENERIC_PREVIEW_CLASS_NAME}--excel`;
 const SR_ONLY_CLASS = `${PREFIX}-sr-only`;
 const SPACER_GIF =
   "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
-const DEFAULT_ERROR_LABEL_TEXT = "Error: This is not a valid file type.";
+const DEFAULT_ERROR_LABEL_TEXT = "To nie jest prawidłowy typ pliku.";
 
 let TYPE_IS_VALID = Boolean(true); // logic gate for change listener
 let DEFAULT_ARIA_LABEL_TEXT = "";
@@ -131,7 +131,7 @@ const createUniqueID = (name) =>
  */
 const getItemsLabel = (fileInputEl) => {
   const acceptsMultiple = fileInputEl.hasAttribute("multiple");
-  const itemsLabel = acceptsMultiple ? "files" : "file";
+  const itemsLabel = acceptsMultiple ? "pliki" : "plik";
 
   return itemsLabel;
 };
@@ -175,8 +175,8 @@ const createVisibleInstructions = (fileInputEl) => {
   const fileInputParent = fileInputEl.closest(DROPZONE);
   const itemsLabel = getItemsLabel(fileInputEl);
   const instructions = document.createElement("div");
-  const dragText = `Drag ${itemsLabel} here or`;
-  const chooseText = "choose from folder";
+  const dragText = `Przeciągnij ${itemsLabel} tutaj albo`;
+  const chooseText = "wybierz z folderu";
 
   // Create instructions text for aria-label
   DEFAULT_ARIA_LABEL_TEXT = `${dragText} ${chooseText}`;
@@ -307,11 +307,11 @@ const updateStatusMessage = (statusElement, fileNames, fileStore) => {
 
   // If files added, update the status message with file name(s)
   if (fileNames.length === 1) {
-    statusMessage = `You have selected the file: ${fileStore}`;
+    statusMessage = `Wybrałeś plik: ${fileStore}`;
   } else if (fileNames.length > 1) {
-    statusMessage = `You have selected ${
+    statusMessage = `Wybrałeś ${
       fileNames.length
-    } files: ${fileStore.join(", ")}`;
+    } pliki: ${fileStore.join(", ")}`;
   }
 
   // Add delay to encourage screen reader readout
@@ -331,14 +331,14 @@ const addPreviewHeading = (fileInputEl, fileNames) => {
   const filePreviewsHeading = document.createElement("div");
   const dropTarget = fileInputEl.closest(`.${TARGET_CLASS}`);
   const instructions = dropTarget.querySelector(`.${INSTRUCTIONS_CLASS}`);
-  let changeItemText = "Change file";
+  let changeItemText = "Zmień plik";
   let previewHeadingText = "";
 
   if (fileNames.length === 1) {
-    previewHeadingText = Sanitizer.escapeHTML`Selected file <span class="usa-file-input__choose">${changeItemText}</span>`;
+    previewHeadingText = Sanitizer.escapeHTML`Wybrany plik <span class="usa-file-input__choose">${changeItemText}</span>`;
   } else if (fileNames.length > 1) {
-    changeItemText = "Change files";
-    previewHeadingText = Sanitizer.escapeHTML`${fileNames.length} files selected <span class="usa-file-input__choose">${changeItemText}</span>`;
+    changeItemText = "Zmień pliki";
+    previewHeadingText = Sanitizer.escapeHTML`${fileNames.length} wybrane pliki <span class="usa-file-input__choose">${changeItemText}</span>`;
   }
 
   // Hides null state content and sets preview heading

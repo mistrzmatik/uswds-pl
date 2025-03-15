@@ -83,14 +83,10 @@ const transformTimePicker = (el) => {
   const getTimeContext = (minutes) => {
     const minute = minutes % 60;
     const hour24 = Math.floor(minutes / 60);
-    const hour12 = hour24 % 12 || 12;
-    const ampm = hour24 < 12 ? "am" : "pm";
 
     return {
       minute,
-      hour24,
-      hour12,
-      ampm,
+      hour24
     };
   };
 
@@ -108,11 +104,11 @@ const transformTimePicker = (el) => {
 
   let defaultValue;
   for (let time = minTime; time <= maxTime; time += step) {
-    const { minute, hour24, hour12, ampm } = getTimeContext(time);
+    const { minute, hour24 } = getTimeContext(time);
 
     const option = document.createElement("option");
     option.value = `${padZeros(hour24, 2)}:${padZeros(minute, 2)}`;
-    option.text = `${hour12}:${padZeros(minute, 2)}${ampm}`;
+    option.text = `${padZeros(hour24, 2)}:${padZeros(minute, 2)}`;
     if (option.text === initialInputEl.value) {
       defaultValue = option.value;
     }
